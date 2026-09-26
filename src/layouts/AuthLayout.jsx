@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-
+// Outlet is တစ်ခုပီးမ တစ်ခု တစ်ခု အောက်မှာ တခု (မင်းပီး ရင် ငါ )
 function AuthLayout() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-6 py-12">

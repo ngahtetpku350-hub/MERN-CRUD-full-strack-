@@ -1,7 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom';
+import { postDetail } from '../../api/services/post';
 
 const PostDetails = () => {
+    // const [postdetail, setPost] = ()=>{}
+    //     const getposts = async ()=>{
+    //         const getpostdata = await postDetail()
+    //         console.log(getpostdata)
+    //         setPost(getpostdata.data)
+    //     }
+
     return (
         <article className="mx-auto max-w-4xl px-6 py-12">
             {/* Back */}
@@ -37,9 +45,7 @@ const PostDetails = () => {
             {/* Content */}
             <div className="py-10">
                 <p className="text-base leading-8 text-gray-700">
-                    The MERN stack is a popular JavaScript-based
-                    technology stack for building full-stack web
-                    applications.
+                    
                 </p>
 
                 <p className="mt-6 text-base leading-8 text-gray-700">

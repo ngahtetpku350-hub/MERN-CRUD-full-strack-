@@ -6,6 +6,10 @@ function Footer() {
           &copy; 2026 MERN Blog. All rights reserved.
         </p>
 
+        <div>
+<h3>Code By Thue Htet Naing</h3>
+          </div>
+
         <div className="flex items-center gap-6">
           <a
             href="#"
@@ -20,6 +24,8 @@ function Footer() {
           >
             Terms
           </a>
+          
+          
         </div>
       </div>
     </footer>

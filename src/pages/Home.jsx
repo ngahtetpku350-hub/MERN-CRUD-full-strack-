@@ -1,6 +1,24 @@
 import { Link } from "react-router-dom";
+import { postList } from "../api/services/post";
+import { useEffect, useState } from "react";
 
 function Home() {
+    const [post, setPosts] = useState([]);
+    
+      useEffect(() => {
+        const fetchPosts = async () => {
+          const getdata = await postList()
+          console.log("API Response:", getdata);
+          setPosts(getdata.data || [])
+        };
+        fetchPosts();
+      }, [])
+      useEffect(()=>{
+        if (localStorage.removeItem("token")){
+      toast.success("logout successfully")
+      navigate('/')
+    }
+      })
     return (
         <div>
             <section className="border-b border-gray-200 bg-white">
@@ -40,94 +58,62 @@ function Home() {
                 </div>
             </section>
 
-            <section className="mx-auto max-w-7xl px-6 py-16">
-                <div className="mb-8 flex items-end justify-between">
-                    <div>
-                        <p className="text-sm font-medium text-gray-500">
-                            From the blog
-                        </p>
+            <section className="mx-auto max-w-7xl px-6 py-12">
+      {/* Header */}
+      <div className="flex flex-col gap-6 border-b border-gray-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-500">Blog</p>
 
-                        <h2 className="mt-1 text-2xl font-bold tracking-tight text-gray-950">
-                            Latest Posts
-                        </h2>
-                    </div>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight text-gray-950">
+            All Posts
+          </h1>
 
-                    <Link
-                        to="/posts"
-                        className="text-sm font-semibold text-gray-700 hover:text-black"
-                    >
-                        View all →
-                    </Link>
-                </div>
+          <p className="mt-2 text-gray-600">
+            Explore all articles and tutorials.
+          </p>
+        </div>
 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    <article className="rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-md">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            Technology
-                        </span>
+        <Link
+          to="/posts/create"
+          className="inline-flex w-fit rounded-lg bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+        >
+          Create Post
+        </Link>
+      </div>
 
-                        <h3 className="mt-3 text-xl font-semibold text-gray-950">
-                            Getting Started with MERN Stack
-                        </h3>
+      {/* Posts */}
+      <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {post.map((post) => (
+          <article
+            key={post._id}
+            className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
+                {post.category?.name}
+              </span>
 
-                        <p className="mt-3 text-sm leading-6 text-gray-600">
-                            Learn how MongoDB, Express, React and
-                            Node.js work together.
-                        </p>
+              <span className="text-xs text-gray-400">{post.date}</span>
+            </div>
 
-                        <Link
-                            to="/posts"
-                            className="mt-5 inline-block text-sm font-semibold text-black"
-                        >
-                            Read article →
-                        </Link>
-                    </article>
+            <h2 className="mt-5 text-xl font-semibold text-gray-950">
+              {post.title}
+            </h2>
 
-                    <article className="rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-md">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            JavaScript
-                        </span>
+            <p className="mt-3 flex-1 text-sm leading-6 text-gray-600">
+              {post.description}
+            </p>
 
-                        <h3 className="mt-3 text-xl font-semibold text-gray-950">
-                            Understanding Async JavaScript
-                        </h3>
-
-                        <p className="mt-3 text-sm leading-6 text-gray-600">
-                            Understand promises and asynchronous
-                            JavaScript.
-                        </p>
-
-                        <Link
-                            to="/posts"
-                            className="mt-5 inline-block text-sm font-semibold text-black"
-                        >
-                            Read article →
-                        </Link>
-                    </article>
-
-                    <article className="rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-md">
-                        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                            Backend
-                        </span>
-
-                        <h3 className="mt-3 text-xl font-semibold text-gray-950">
-                            Building REST APIs with Express
-                        </h3>
-
-                        <p className="mt-3 text-sm leading-6 text-gray-600">
-                            Learn how to structure an Express backend
-                            with routes and services.
-                        </p>
-
-                        <Link
-                            to="/posts"
-                            className="mt-5 inline-block text-sm font-semibold text-black"
-                        >
-                            Read article →
-                        </Link>
-                    </article>
-                </div>
-            </section>
+            <Link
+              to={`/posts/${post._id}`}
+              className="mt-6 text-sm font-semibold text-black"
+            >
+              Read article →
+            </Link>
+          </article>
+        ))}
+      </div>
+    </section>
         </div>
     );
 }

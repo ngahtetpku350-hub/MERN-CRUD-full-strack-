@@ -1,6 +1,59 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { register } from "../../api/services/user";
+import { toast } from "react-toastify";
 const Register = () => {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
+
+  const newUser = {
+    name,
+    email,
+    password
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      toast.warn("your already login")
+      navigate("/"); 
+    }
+  });
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!name || !email) {
+      toast.warning("All fields are required!");
+      return;
+    }
+    if ( password != confirmPassword){
+      toast.warning("passwrod does't match");
+      return;
+    }
+
+    try {
+      const response = await register({
+        name,email,password
+      });
+      toast.success(response.message);
+      navigate("/login")
+    } catch (error) {
+      
+    }
+
+    // await register(newUser);
+    // toast.success("Register successfully!");
+    // if(newUser){
+    //     navigate("/login")
+    // }
+    
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -13,7 +66,7 @@ const Register = () => {
         </p>
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         {/* Name */}
         <div>
           <label
@@ -27,6 +80,8 @@ const Register = () => {
             id="name"
             type="text"
             placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-black"
           />
         </div>
@@ -44,6 +99,8 @@ const Register = () => {
             id="email"
             type="email"
             placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-black"
           />
         </div>
@@ -61,6 +118,8 @@ const Register = () => {
             id="password"
             type="password"
             placeholder="Create a password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-black"
           />
         </div>
@@ -78,12 +137,14 @@ const Register = () => {
             id="confirmPassword"
             type="password"
             placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-black"
           />
         </div>
 
         <button
-          type="submit"
+          // type="submit"
           className="mt-6 w-full rounded-lg bg-black px-5 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
         >
           Create Account
