@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { postList } from "../../api/services/post";
+import { formatPostDate } from "../../components/Date";
 // const posts = [
 //   {
 //     id: 1,
@@ -27,18 +28,24 @@ import { postList } from "../../api/services/post";
 //     date: "September 10, 2026",
 //   },
 // ];
-
 const Posts = () => {
   const [post, setPosts] = useState([]);
+  const [search, setSearch] = useState("");
+
+  // search
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   console.log(search)
+  // };
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const getdata = await postList()
+      const getdata = await postList(search);
       console.log("API Response:", getdata);
-      setPosts(getdata.data || [])
+      setPosts(getdata.data || []);
     };
     fetchPosts();
-  }, [])
+  }, [search]);
   return (
     <section className="mx-auto max-w-7xl px-6 py-12">
       {/* Header */}
@@ -62,45 +69,60 @@ const Posts = () => {
           Create Post
         </Link>
       </div>
+        {/* <form action="post" onSubmit={handleSubmit}> */}
+          <input
+            id="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search......"
+            className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-black"
+            type="search"
+          />
+        {/* </form> */}
 
       {/* Posts */}
       <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-  {post.length > 0 && 
-    post.map((singlePost) => (
-      <article
-        key={singlePost._id}
-        className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
-      >
-        <div className="flex items-center justify-around">
-          <span className="text-2xl text-black rounded-2xl bg-green-400 p-2">{singlePost.username?.name}</span>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
-            {singlePost.category?.name}
-          </span>
+        {post.length > 0 &&
+          post.map((singlePost) => (
+            <article
+              key={singlePost._id}
+              className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 transition hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="flex items-center justify-around">
+                <span className="text-2xl text-black rounded-2xl bg-green-400 p-2">
+                  {singlePost.username?.name}
+                </span>
+              </div>
+              {/* <div>
+                <span>{singlePost.created_at}</span>
+              </div> */}
+              <div className="flex items-center justify-between">
+                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
+                  {singlePost.category?.name}
+                </span>
 
-          <span className="text-xs text-gray-400">{singlePost.date}</span>
-        </div>
+                <span className="text-xs text-gray-400">{formatPostDate(singlePost.createdAt)}</span>
+              </div>
 
-        <h2 className="mt-5 text-xl font-semibold text-gray-950">
-          {singlePost.title}
-        </h2>
+              <h2 className="mt-5 text-xl font-semibold text-gray-950">
+                {singlePost.title}
+              </h2>
 
-        <p className="mt-3 flex-1 text-sm leading-6 text-gray-600">
-          {singlePost.description}
-        </p>
+              <p className="mt-3 flex-1 text-sm leading-6 text-gray-600">
+                {singlePost.description}
+              </p>
 
-        <Link
-          to={`/posts/${singlePost._id}`}
-          className="mt-6 text-sm font-semibold text-black"
-        >
-          Read article →
-        </Link>
-      </article>
-    ))}
-</div>
+              <Link
+                to={`/posts/${singlePost._id}`}
+                className="mt-6 text-sm font-semibold text-black"
+              >
+                Read article →
+              </Link>
+            </article>
+          ))}
+      </div>
     </section>
   );
-}
+};
 
 export default Posts;

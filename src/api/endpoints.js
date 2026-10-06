@@ -2,9 +2,9 @@ const endpoints = {
     posts:{
         list:"/posts",
         create:"/posts",
-        // detail:(id) => `/detail/${id}`,
+        detail:(id) => `/posts/${id}`,
         // update:(id) => `/update/${id}`,
-        // delete:(id) => `/delete/${id}`
+        delete:(id) => `/posts/${id}`
     },
     users:{
         create:"/auth/register",

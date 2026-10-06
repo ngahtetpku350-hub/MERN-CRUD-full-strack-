@@ -2,65 +2,61 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { login } from "../../api/services/user";
+import { EyeIcon, EyeOff } from "lucide-react";
 
 const Login = () => {
-
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // password on off
+  const [eyeToggle, setEyetoggle] = useState(false);
 
-  
-  
   useEffect(() => {
-    if(localStorage.getItem("user")){
-      localStorage.removeItem("user")
-      toast.success("Logout successfully")
-      navigate("/login")
+    if (localStorage.getItem("user")) {
+      localStorage.removeItem("user");
+      toast.success("Logout successfully");
+      navigate("/login");
     }
     if (localStorage.getItem("token")) {
-      toast.warn("your already login")
-      navigate('/'); 
+      toast.warn("your already login");
+      navigate("/");
     }
-    
   });
-  
-  // const userLogin = {
-  //   email,
-  //   password
-  // }
+
   const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      if (!password || !email) {
-        toast.warning("All fields are required!");
-        return;
-      }
+    e.preventDefault();
 
-      try {
-        const response = await login({
-          email,password
-        });
-         localStorage.setItem("token",response.token)
-        //  store user data in cookie 
-         localStorage.setItem("user",response.data.id)
-         // store user name
-         localStorage.setItem("username", response.data.name)
-         toast.success(response.message);
-         navigate('/posts')
-      } catch (error) {
-          toast.error(error.response.data.message)
-      }
+    if (!password || !email) {
+      toast.warning("All fields are required!");
+      return;
+    }
 
-      // await login(userLogin);
-      // toast.success("Login successfully!");
+    try {
+      const response = await login({
+        email,
+        password,
+      });
+      localStorage.setItem("token", response.token);
+      //  store user data in cookie
+      localStorage.setItem("user", response.data.id);
+      // store user name
+      localStorage.setItem("username", response.data.name);
+      toast.success(response.message);
+      navigate("/posts");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
 
-      // if (userLogin){
-        
-      // }
-    };
-      
+    // await login(userLogin);
+    // toast.success("Login successfully!");
+
+    // if (userLogin){
+
+    // }
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -94,22 +90,33 @@ const Login = () => {
         </div>
 
         {/* Password */}
-        <div className="mt-5">
+        <div className="mt-5 relative">
           <label
             htmlFor="password"
             className="block text-sm font-semibold text-gray-800"
           >
             Password
           </label>
-
           <input
             id="password"
-            type="password"
+            type={eyeToggle ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             className="mt-2 w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition placeholder:text-gray-400 focus:border-black"
           />
+
+          {eyeToggle ? (
+            <EyeOff
+              className="w-4 h-4 absolute right-4 bottom-4"
+              onClick={() => setEyetoggle(!eyeToggle)}
+            />
+          ) : (
+            <EyeIcon
+              className="w-4 h-4 absolute right-4 bottom-4"
+              onClick={() => setEyetoggle(!eyeToggle)}
+            />
+          )}
         </div>
 
         <button

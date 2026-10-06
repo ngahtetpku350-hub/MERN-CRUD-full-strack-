@@ -2,9 +2,10 @@ import { resolvePath } from "react-router-dom";
 import api from "../api";
 import endpoints from "../endpoints"
 
-export const postList = async () => {
-    const response = await api.get(endpoints.posts.list);
+export const postList = async (search) => {
+    const response = await api.get(`${endpoints.posts.list}/?search=${search}`);
     return response.data;
+    // console.log(response)
 }
 
 export const postCreate = async (data) => {
